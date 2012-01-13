@@ -12,5 +12,18 @@
 
 void setup(){
 
+    /* Status LED */
+    pinMode(STATUS_LED, OUTPUT);
+    digitalWrite(STATUS_LED, HIGH);
+
+    /* Begin Serial to Computer */
+    if (SERIAL_ENABLED) {
+        Serial.begin(BAUD_RATE);
+        Serial.println("Quadcopter - GCSE Electronic Products");
+        Serial.println("Daniel Saul - 2011");
+        Serial.println();
+    }
+    
+    
 
 }
