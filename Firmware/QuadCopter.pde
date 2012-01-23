@@ -24,6 +24,6 @@ void setup(){
         Serial.println();
     }
     
-    
+    setupReceiver();    
 
 }
