@@ -10,20 +10,37 @@
 
  */
 
+// Include various header files
+#include "QuadCopter.h"
+//#include "adc.h"
+//#include "pid.h"
+#include "receiver.h"
+
+/////////////////////////////////
+// Main Program Initialisation //
+// //////////////////////////////
 void setup(){
 
-    /* Status LED */
+    // Status LED
     pinMode(STATUS_LED, OUTPUT);
     digitalWrite(STATUS_LED, HIGH);
+    delay(100);
+    digitalWrite(STATUS_LED, LOW);
 
-    /* Begin Serial to Computer */
+    // Begin Serial to Computer, if enabled
     if (SERIAL_ENABLED) {
         Serial.begin(BAUD_RATE);
         Serial.println("Quadcopter - GCSE Electronic Products");
-        Serial.println("Daniel Saul - 2011");
-        Serial.println();
+        Serial.println("Daniel Saul - 2011 \n");
     }
     
     setupReceiver();    
+    //setupADC();
+
+}
+
+void loop(){
+
+
 
 }
