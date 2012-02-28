@@ -31,7 +31,7 @@ void setup(){
     if (SERIAL_ENABLED) {
         Serial.begin(BAUD_RATE);
         Serial.println("Quadcopter - GCSE Electronic Products");
-        Serial.println("Daniel Saul - 2011 \n");
+        Serial.println("Daniel Saul - 2012 \n");
     }
     
     setupReceiver();    

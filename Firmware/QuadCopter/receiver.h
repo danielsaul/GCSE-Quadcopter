@@ -13,12 +13,26 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
 
+// Include necessary header files
 #include "Arduino.h"
 #include "QuadCopter.h"
 
+//Declare functions
 void setupReceiver();
 void triggerRX();
 void checkMotorArming();
+
+//Declare Variables
+int rx_min = 1000;
+int rx_centre = 1500;
+int rx_max = 2000;
+int rx_currentChannel;
+int rx_raw[5] = { 1500, 1500, 1000, 1500, 1500 };
+long rx_now;
+long rx_prev;
+unsigned long rx_diff;
+bool rx_ready;
+
 
 // Channels:
 // 1. Pitch         (Forward/backward)
@@ -27,18 +41,10 @@ void checkMotorArming();
 // 4. Yaw           (Spin Left/Right)
 // 5. Motor Arming
 
-int rx_min = 1000;
-int rx_centre = 1500;
-int rx_max = 2000;
-int rx_currentChannel;
-int rx_raw[5] = { 1500, 1500, 1000, 1500, 1500 };
-
-long rx_now;
-long rx_prev;
-
-unsigned long rx_diff;
-bool rx_ready;
-
+////////////////////
+//Actual functions//
+////////////////////
+//
 void setupReceiver(){
 
     pinMode(RX_IN, INPUT);                       // Set the pin as input

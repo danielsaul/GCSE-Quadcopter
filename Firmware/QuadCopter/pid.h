@@ -10,10 +10,42 @@
 
  */
 
+#ifndef PID_H
+#define PID_H
+
+//Include necessary header files
+#include "Arduino.h"
+#include "QuadCopter.h"
+
+//Declare functions
+int processPID(current, target);
+
+//Declare Variables
+struct PIDvariables{
+    float Pgain;
+    float Igain;
+    float Dgain;
+    float previous;
+    float prevtime;
+    float accumulatedError;
+    float windupGuard;
+} ;
+
+PIDvariables PID[10];
+
+// PID[1]   GYRO_MODE   PITCH
+// PID[2]   GYRO_MODE   ROLL
+// PID[3]   MIXED_MODE  PITCH
+// PID[4]   MIXED_MODE  ROLL
+// PID[5]   MIXED_MODE  GYROPITCH
+// PID[6]   MIXED_MODE  GYROROLL
+// PID[7]   HEADING
+// PID[8]   ALTITUDE
+
 
 // Proportional Integral Derivative Controller
 
-void processPID(current, target){
+int processPID(current, target){
 
     error = target - current;
     float timediff = (loopTime - prevPID) / 1000000.0; //Convert microseconds to seconds
@@ -29,3 +61,5 @@ void processPID(current, target){
     return Pterm + Iterm + Dterm;
 
 }
+
+#endif

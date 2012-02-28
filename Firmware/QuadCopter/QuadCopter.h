@@ -1,7 +1,7 @@
 /*
   QuadCopter - GCSE Electronic Products
   Daniel Saul - www.DanSaul.co.uk
-  (C) Copyright 2011. All Rights Reserved.
+  (C) Copyright 2011/2012. All Rights Reserved.
  
   Arduino-based Quadcopter Control System
  
@@ -30,29 +30,6 @@
 /* Gyro or Gyro&Accel */
 #define GYRO_MODE       true
 #define MIXED_MODE      false  
-
-/* PID Variables*/
-struct PIDvariables{
-    float Pgain;
-    float Igain;
-    float Dgain;
-    float previous;
-    float prevtime;
-    float accumulatedError;
-    float windupGuard;
-} ;
-
-PIDvariables PID[10];
-
-// PID[1]   GYRO_MODE   PITCH
-// PID[2]   GYRO_MODE   ROLL
-// PID[3]   MIXED_MODE  PITCH
-// PID[4]   MIXED_MODE  ROLL
-// PID[5]   MIXED_MODE  GYROPITCH
-// PID[6]   MIXED_MODE  GYROROLL
-// PID[7]   HEADING
-// PID[8]   ALTITUDE
-//
 
 // Other Variables
 bool motorsArmed = false;
