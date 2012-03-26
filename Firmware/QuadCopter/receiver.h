@@ -44,7 +44,7 @@ bool rx_ready;
 ////////////////////
 //Actual functions//
 ////////////////////
-//
+
 void setupReceiver(){
 
     pinMode(RX_IN, INPUT);                       // Set the pin as input

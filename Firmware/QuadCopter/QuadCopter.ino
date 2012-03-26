@@ -35,11 +35,13 @@ void setup(){
     }
     
     setupReceiver();    
-    //setupADC();
+    setupADC();
+    setupGyro();
 
 }
 
 void loop(){
+    
 
 
 
