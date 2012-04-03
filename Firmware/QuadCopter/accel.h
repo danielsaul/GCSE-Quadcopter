@@ -1,4 +1,4 @@
-*
+/*
   QuadCopter - GCSE Electronic Products
   Daniel Saul - www.DanSaul.co.uk
   (C) Copyright 2011/2012. All Rights Reserved.
@@ -10,97 +10,60 @@
 
  */
 
-
 #ifndef ACCEL_H
 #define ACCEL_H
 
+// Include necessary header files
 #include "Arduino.h"
+#include "QuadCopter.h"
 #include "adc.h"
-
-#define SAMPLECOUNT 400.0
-#define XZERO 700
-#define YZERO 700
-#define ZZERO 700
-
   
-void initializeAccel();
+//Declare functions
 void measureAccel();
-void measureAccelSum();
-void evaluateMetersPerSec();
-void computeAccelBias();
+void calibrateAccel();
 
-float accelScaleFactor[3] = {0.02395604,0.02395604,0.02395604}; //2.395 = 0.02395604
-float runTimeAccelBias[3] = {0, 0, 0};
-float accelOneG = 0.0;
-float meterPerSecSec[3] = {0.0,0.0,0.0};
-long accelSample[3] = {0,0,0};
-byte accelSampleCount = 0;
+//Declare variables
+#define CONVERSION_FACTOR 0.023956043956
+long calibrationSamples[3] = {0,0,0};
+float accelOffset[3] = {0.0,0.0,0.0};
+float acceleration[3] = {0.0,0.0,0.0};
 
+////////////////////
+//Actual functions//
+////////////////////
 
+void measureAccel(){
 
-void measureAccel() {
-
-  for (byte axis = XAXIS; axis <= ZAXIS; axis++) {
-    const float rawADC = getRawADC(axis);
-	if (rawADC > 500) { // Check if measurement good
-          
-             meterPerSecSec[axis] = rawADC * accelScaleFactor[axis] + runTimeAccelBias[axis];
-          
-        }
-  }
-}
-
-
-void measureAccelSum() {
-  for (byte axis = XAXIS; axis <= ZAXIS; axis++) {
-    const float rawADC = getRawADC(axis);
-    if (rawADC > 500) { // Check if measurement good
-	  accelSample[axis] += rawADC;
-	}
-    
-  }
-  accelSampleCount++;
-  
-}
-
-void recalibrateAccel(axis){
-
-    for(int samples = 0; sample < 400; samples++) {
-        readADC();
-        
-        for (byte axis = XAXIS; axis <= ZAXIS; axis++){
-
-            
-
-        }
+    for(byte axis = XAXIS; axis <= ZAXIS; axis++){
+        int rawADC = getRawADC(axis);
+        acceleration[axis] = rawADC * CONVERSION_FACTOR + accelOffset[axis];
     }
 
 }
 
+void calibrateAccel(){
 
-void setupAccel() {
+    //Take 500 samples and add them together for each axis
+    for(int samples = 0; samples < 500; samples++){
+        readADC();
+        for(byte axis = XAXIS; axis <= ZAXIS; axis++){
+            int rawADC = getRawADC(axis);
+            calibrationSamples[axis] += rawADC;
+        }
+    }
 
-    readADC();
-    float adc = getRawADC(axis);
+    //Divide the sum of the samples by 500, giving an average reading for each axis
+    //Then multiply it by the magic number to get the zero offset in metres/sec/sec
+    for(byte axis = XAXIS; axis <= ZAXIS; axis++){
+        calibrationSamples[axis] /= 500;
+        calibrationSamples[axis] *= CONVERSION_FACTOR;
+    }
 
-  for (int samples = 0; samples < SAMPLECOUNT; samples++) {
-    measureAccelSum();
-    delay(10);
-  }
+    accelOffset[XAXIS] = -calibrationSamples[XAXIS];
+    accelOffset[YAXIS] = -calibrationSamples[YAXIS];
+    accelOffset[ZAXIS] = 9.8065-calibrationSamples[ZAXIS];
 
-  for (byte axis = 0; axis < 3; axis++) {
-    meterPerSecSec[axis] = (float(accelSample[axis])/SAMPLECOUNT) * accelScaleFactor[axis];
-    accelSample[axis] = 0;
-  }
-  accelSampleCount = 0;
-
-  runTimeAccelBias[XAXIS] = -meterPerSecSec[XAXIS];
-  runTimeAccelBias[YAXIS] = -meterPerSecSec[YAXIS];
-  runTimeAccelBias[ZAXIS] = -9.8065 - meterPerSecSec[ZAXIS];
-
-  accelOneG = abs(meterPerSecSec[ZAXIS] + runTimeAccelBias[ZAXIS]);
 }
-
 
 
 #endif
