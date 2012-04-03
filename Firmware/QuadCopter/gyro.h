@@ -15,10 +15,10 @@
 
 // Include necessary header files
 #include "Arduino.h"
+#include "QuadCopter.h"
 #include "adc.h"
 
 //Declare functions
-void setupGyro();
 
 //Declare variables
 
@@ -26,16 +26,5 @@ void setupGyro();
 //Actual functions//
 ////////////////////
 
-void setupGyro(){
- 
-    digitalWrite(STATUS_LED,HIGH);
-    delay(50);
-    digitalWrite(STATUS_LED,LOW);
-
-    if (SERIAL_ENABLED){
-        Serial.println("Gyro: Enabled & Calibrated");
-    }
-
-}
 
 #endif

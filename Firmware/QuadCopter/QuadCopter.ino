@@ -12,11 +12,12 @@
 
 // Include various header files
 #include "QuadCopter.h"
-//#include "adc.h"
+#include "adc.h"
 //#include "pid.h"
 #include "receiver.h"
 #include <Servo.h>
 #include "motors.h"
+#include "accel.h"
 
 /////////////////////////////////
 // Main Program Initialisation //
@@ -37,24 +38,21 @@ void setup(){
     }
     
     setupReceiver();    
-    //setupADC();
-    //setupGyro();
+    setupADC();
     setupMotors();
+    calibrateAccel();
 }
 
 void loop(){
-   delay(500);
 
-   Serial.print(rx_raw[0]);
-   Serial.print(", ");
-   Serial.print(rx_raw[1]);
-   Serial.print(", ");
-   Serial.print(rx_raw[2]);
-   Serial.print(", ");
-   Serial.print(rx_raw[3]);
-   Serial.print(", ");
-   Serial.print(rx_raw[4]);
-   Serial.println();
-
+    readADC();
+    measureAccel();
+    Serial.print(acceleration[0]);
+    Serial.print(", ");
+    Serial.print(acceleration[1]);
+    Serial.print(", ");
+    Serial.print(acceleration[2]);
+    Serial.print("\n");
+    delay(100);
 
 }

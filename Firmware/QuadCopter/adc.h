@@ -31,7 +31,9 @@ uint16_t result;
 ////////////////////
 
 void setupADC(){
- 
+
+
+    Wire.begin();
     readADC();
 
     digitalWrite(STATUS_LED,HIGH);

@@ -24,7 +24,7 @@ void calibrateAccel();
 
 //Declare variables
 #define CONVERSION_FACTOR 0.023956043956
-long calibrationSamples[3] = {0,0,0};
+float calibrationSamples[3] = {0.0,0.0,0.0};
 float accelOffset[3] = {0.0,0.0,0.0};
 float acceleration[3] = {0.0,0.0,0.0};
 
@@ -35,7 +35,7 @@ float acceleration[3] = {0.0,0.0,0.0};
 void measureAccel(){
 
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
-        int rawADC = getRawADC(axis);
+        float rawADC = getRawADC(axis);
         acceleration[axis] = rawADC * CONVERSION_FACTOR + accelOffset[axis];
     }
 
@@ -47,7 +47,7 @@ void calibrateAccel(){
     for(int samples = 0; samples < 500; samples++){
         readADC();
         for(byte axis = XAXIS; axis <= ZAXIS; axis++){
-            int rawADC = getRawADC(axis);
+            float rawADC = getRawADC(axis);
             calibrationSamples[axis] += rawADC;
         }
     }
@@ -62,6 +62,8 @@ void calibrateAccel(){
     accelOffset[XAXIS] = -calibrationSamples[XAXIS];
     accelOffset[YAXIS] = -calibrationSamples[YAXIS];
     accelOffset[ZAXIS] = 9.8065-calibrationSamples[ZAXIS];
+
+    
 
 }
 
