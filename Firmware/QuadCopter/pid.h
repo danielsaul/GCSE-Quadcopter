@@ -5,7 +5,7 @@
  
   Arduino-based Quadcopter Control System
  
-  #File     : receiver.h
+  #File     : pid.h
   #Author   : Daniel Saul
 
  */

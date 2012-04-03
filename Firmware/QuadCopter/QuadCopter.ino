@@ -15,6 +15,8 @@
 //#include "adc.h"
 //#include "pid.h"
 #include "receiver.h"
+#include <Servo.h>
+#include "motors.h"
 
 /////////////////////////////////
 // Main Program Initialisation //
@@ -35,14 +37,24 @@ void setup(){
     }
     
     setupReceiver();    
-    setupADC();
-    setupGyro();
-
+    //setupADC();
+    //setupGyro();
+    setupMotors();
 }
 
 void loop(){
-    
+   delay(500);
 
+   Serial.print(rx_raw[0]);
+   Serial.print(", ");
+   Serial.print(rx_raw[1]);
+   Serial.print(", ");
+   Serial.print(rx_raw[2]);
+   Serial.print(", ");
+   Serial.print(rx_raw[3]);
+   Serial.print(", ");
+   Serial.print(rx_raw[4]);
+   Serial.println();
 
 
 }

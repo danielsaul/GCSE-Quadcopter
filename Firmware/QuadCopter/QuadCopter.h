@@ -16,12 +16,13 @@
 /* Pin Definitions */
 #define STATUS_LED      13
 #define RX_IN           2
-#define MOTOR_A         11
-#define MOTOR_B         10
-#define MOTOR_C         9
-#define MOTOR_D         6
+#define MOTORA_PIN      11
+#define MOTORB_PIN      10
+#define MOTORC_PIN      9
+#define MOTORD_PIN      6
 #define ULTRASOUND_IN   8
 #define ULTRASOUND_OUT  7
+#define BATTERY_READ    0  // Analog 0
 
 /* Serial Communication with Computer - for debugging etc. */
 #define BAUD_RATE       115200
@@ -31,7 +32,19 @@
 #define GYRO_MODE       true
 #define MIXED_MODE      false  
 
-// Other Variables
-bool motorsArmed = false;
+// Axis
+#define XAXIS           0
+#define YAXIS           1
+#define ZAXIS           2
+
+// Motors
+#define MOTOR_A         0
+#define MOTOR_B         1
+#define MOTOR_C         2
+#define MOTOR_D         3
+#define MOTOR_MINSPEED  1000
+#define MOTOR_MIDSPEED  1500
+#define MOTOR_MAXSPEED  2000
+bool motorsArmed =      false;
 
 #endif
