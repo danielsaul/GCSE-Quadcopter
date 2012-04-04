@@ -24,7 +24,7 @@ void calibrateAccel();
 
 //Declare variables
 #define CONVERSION_FACTOR 0.023956043956
-float calibrationSamples[3] = {0.0,0.0,0.0};
+float accelCalibrationSamples[3] = {0.0,0.0,0.0};
 float accelOffset[3] = {0.0,0.0,0.0};
 float acceleration[3] = {0.0,0.0,0.0};
 
@@ -48,20 +48,20 @@ void calibrateAccel(){
         readADC();
         for(byte axis = XAXIS; axis <= ZAXIS; axis++){
             float rawADC = getRawADC(axis);
-            calibrationSamples[axis] += rawADC;
+            accelCalibrationSamples[axis] += rawADC;
         }
-    }
+    } 
 
     //Divide the sum of the samples by 500, giving an average reading for each axis
     //Then multiply it by the magic number to get the zero offset in metres/sec/sec
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
-        calibrationSamples[axis] /= 500;
-        calibrationSamples[axis] *= CONVERSION_FACTOR;
+        accelCalibrationSamples[axis] /= 500;
+        accelCalibrationSamples[axis] *= CONVERSION_FACTOR;
     }
 
-    accelOffset[XAXIS] = -calibrationSamples[XAXIS];
-    accelOffset[YAXIS] = -calibrationSamples[YAXIS];
-    accelOffset[ZAXIS] = 9.8065-calibrationSamples[ZAXIS];
+    accelOffset[XAXIS] = -accelCalibrationSamples[XAXIS];
+    accelOffset[YAXIS] = -accelCalibrationSamples[YAXIS];
+    accelOffset[ZAXIS] = 9.8065-accelCalibrationSamples[ZAXIS];
 
     
 
