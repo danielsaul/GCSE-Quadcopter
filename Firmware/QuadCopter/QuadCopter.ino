@@ -12,17 +12,27 @@
 
 // Include various header files
 #include "QuadCopter.h"
-//#include "adc.h"
-//#include "pid.h"
-//#include "receiver.h"
-#include <Servo.h>
+#include "adc.h"
+#include "pid.h"
+#include "receiver.h"
 #include "motors.h"
 //#include "accel.h"
+#include "gyro.h"
 
 /////////////////////////////////
 // Main Program Initialisation //
 // //////////////////////////////
 void setup(){
+
+    // Set outputs
+    pinMode(MOTORA_PIN, OUTPUT);
+    digitalWrite(MOTORA_PIN, LOW);
+    pinMode(MOTORB_PIN, OUTPUT);
+    digitalWrite(MOTORB_PIN, LOW);
+    pinMode(MOTORC_PIN, OUTPUT);
+    digitalWrite(MOTORC_PIN, LOW);
+    pinMode(MOTORD_PIN, OUTPUT);
+    digitalWrite(MOTORD_PIN, LOW);
 
     // Status LED
     pinMode(STATUS_LED, OUTPUT);
@@ -37,37 +47,73 @@ void setup(){
         Serial.println("Daniel Saul - 2012 \n");
     }
     
-//    setupReceiver();    
-//    setupADC();
+    setupReceiver();    
+    setupADC();
     setupMotors();
 //    calibrateAccel();
+    calibrateGyro();
+
 }
 
 void loop(){
 /*
     readADC();
-    measureAccel();
-    Serial.print(acceleration[0]);
+    measureGyro();
+    Serial.print(gyroRate[0]);
     Serial.print(", ");
-    Serial.print(acceleration[1]);
+    Serial.print(gyroRate[1]);
     Serial.print(", ");
-    Serial.print(acceleration[2]);
+    Serial.print(gyroRate[2]);
     Serial.print("\n");
     delay(100);
 */
-
-    motorSpeed[0] = 1200;
-    motorSpeed[1] = 1200;
-    motorSpeed[2] = 1200;
-    motorSpeed[3] = 1200;
-    updateMotors();
-    delay(5000);
-    motorSpeed[0] = 1000;
-    motorSpeed[1] = 1000;
-    motorSpeed[2] = 1000;
-    motorSpeed[3] = 1000;
-    updateMotors();
-    delay(5000);
+/*
+    Serial.print(rx_raw[0]);
+    Serial.print(", ");
+    Serial.print(rx_raw[1]);
+    Serial.print(", ");
+    Serial.print(rx_raw[2]);
+    Serial.print(", ");
+    Serial.print(rx_raw[3]);
+    Serial.print(", ");
+    Serial.print(rx_raw[4]);
+    Serial.print("\n");
+    */
     
+    long loopTime = micros();
 
+    int throttle = ((rx_raw[2]-1000)/1)+1000; // Scaled to 1/3
+        
+    readADC();
+    measureGyro();
+
+    int rollx = processPID(1500, gyroRate[XAXIS] + 1500, &pidstuff[1]);
+    int pitchy = processPID(1500, gyroRate[YAXIS] + 1500, &pidstuff[0]);
+
+    // Motors A and C are opposite
+    int throttleA = throttle - pitchy;
+    int throttleC = throttle + pitchy;
+
+    // Motors B and D are opposite
+    int throttleB = throttle - rollx;
+    int throttleD = throttle + rollx;
+
+    throttleA = constrain(throttleA, 1100, 2000);
+    throttleB = constrain(throttleB, 1100, 2000);
+    throttleC = constrain(throttleC, 1100, 2000);
+    throttleD = constrain(throttleD, 1100, 2000);
+
+    setMotors(throttleA,1000,throttleC,1000);
+    
+    checkMotorArming();
+    if(!motorsArmed){
+        setMotors(1000,1000,1000,1000);
+        digitalWrite(STATUS_LED, LOW);
+    }else{
+        digitalWrite(STATUS_LED, HIGH);
+    }
+
+    updateMotors();
+    
+    delay(100);
 }

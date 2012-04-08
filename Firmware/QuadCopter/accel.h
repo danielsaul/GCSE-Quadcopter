@@ -63,7 +63,9 @@ void calibrateAccel(){
     accelOffset[YAXIS] = -accelCalibrationSamples[YAXIS];
     accelOffset[ZAXIS] = 9.8065-accelCalibrationSamples[ZAXIS];
 
-    
+    if (SERIAL_ENABLED){
+        Serial.println("Accelerometer: Calibrated.");
+    }
 
 }
 

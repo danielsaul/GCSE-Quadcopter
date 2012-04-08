@@ -16,12 +16,13 @@
 // Include necessary header files
 #include "Arduino.h"
 #include "QuadCopter.h"
-#include <Servo.h>
+#include "Servo.h"
 
 
 //Declare functions
 void setupMotors();
 void updateMotors();
+void setMotors();
 
 //Declare Variables
 Servo motorA;
@@ -52,6 +53,15 @@ void setupMotors(){
         Serial.println("Motors: Setup Complete.");
         Serial.println("Motors: Disarmed.");
     }
+
+}
+
+void setMotors(int a, int b, int c, int d){
+
+    motorSpeed[MOTOR_A] = a;
+    motorSpeed[MOTOR_B] = b;
+    motorSpeed[MOTOR_C] = c;
+    motorSpeed[MOTOR_D] = d;
 
 }
 

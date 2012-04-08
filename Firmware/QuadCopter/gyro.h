@@ -23,7 +23,6 @@ void calibrateGyro();
 void measureGyro();
 
 //Declare variables
-#define GYRO_FACTOR 0.0
 float gyroCalibrationSamples[3] = {0.0,0.0,0.0};
 float gyroOffset[3] = {0.0,0.0,0.0};
 float gyroRate[3] = {0.0,0.0,0.0};
@@ -32,12 +31,18 @@ float gyroRate[3] = {0.0,0.0,0.0};
 //Actual functions//
 ////////////////////
 
+int smooth(int current, int previous, int factor) {
+  return ((previous * (16 - factor) + (current * factor))) / 16;
+}
+
+
 void measureGyro(){
 
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
         float rawADC = getRawADC(axis + 3);
         rawADC -= gyroOffset[axis];
-        gyroRate[axis] = rawADC * radians((3.3/4095.0) / 0.002);
+        gyroRate[axis] = smooth(rawADC, gyroRate[axis], 8);
+        //gyroRate[axis] = rawADC * radians((3.3/4095.0) / 0.002);
     }
 
 }
@@ -52,9 +57,12 @@ void calibrateGyro(){
         }
     }
 
-    for byte axis = XAXIS; axis <= ZAXIS; axis++){
-        gyroCalibrationSamples[axis] /= 500;
-        gyroOffset[axis] *= GYRO_FACTOR;
+    for(byte axis = XAXIS; axis <= ZAXIS; axis++){
+        gyroOffset[axis] = gyroCalibrationSamples[axis] / 500;
+    }
+
+    if (SERIAL_ENABLED){
+        Serial.println("Gyroscopes: Calibrated.");
     }
 
 }

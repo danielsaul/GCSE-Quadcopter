@@ -18,45 +18,43 @@
 #include "QuadCopter.h"
 
 //Declare functions
-int processPID(current, target);
+int processPID(long target, long current);
 
 //Declare Variables
 struct PIDvariables{
-    float Pgain;
-    float Igain;
-    float Dgain;
-    float previous;
-    float prevtime;
+    int Pgain;
+    int Igain;
+    int Dgain;
+    int previous;
+    long prevtime;
     float accumulatedError;
-    float windupGuard;
-} ;
+    long Ilimit;
+} pidstuff[2]{ 
+    { 1000, 0, 0, 0, 0, 0.0, umm }
+    { 250, 0, 0, 0, 0, 0.0, umm };
 
-PIDvariables PID[10];
+// PID[0]   GYRO_MODE   PITCH
+// PID[1]   GYRO_MODE   ROLL
 
-// PID[1]   GYRO_MODE   PITCH
-// PID[2]   GYRO_MODE   ROLL
-// PID[3]   MIXED_MODE  PITCH
-// PID[4]   MIXED_MODE  ROLL
-// PID[5]   MIXED_MODE  GYROPITCH
-// PID[6]   MIXED_MODE  GYROROLL
-// PID[7]   HEADING
-// PID[8]   ALTITUDE
+
 
 
 // Proportional Integral Derivative Controller
 
-int processPID(current, target){
+int processPID(long target, long current, struct PIDvariables *pid){
 
-    error = target - current;
-    float timediff = (loopTime - prevPID) / 1000000.0; //Convert microseconds to seconds
-    prevPID = loopTime;
-    PID_accumulatedError += timediff * error;
+    long error = target - current;
+   // float timediff = (loopTime - prevPID) / 1000000.0; //Convert microseconds to seconds
+   // pid->prevtime = loopTime;
+    pid->accumulatedError += error;
     
-    float Pterm = error * PID_Pgain;
-    float Iterm = PID_accumulatedError * PID_Igain;
-    float Dterm = (((current - PID_prevpos) / timediff) * PID_Dgain) / 100;    
+    constrain(pid->accumulatedError, -pid->accumulatedError, pid->accumulatedError);
+
+    long Pterm = (error * pid->Pgain) / 100;
+    float Iterm = pid->accumulatedError * pid->Igain;
+    long Dterm = ((current - pid->previous) * pid->Dgain) / 100;    
     
-    PID_prevpos = current;
+    pid->previous = current;
 
     return Pterm + Iterm + Dterm;
 

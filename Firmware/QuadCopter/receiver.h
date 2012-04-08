@@ -35,11 +35,11 @@ bool rx_ready;
 
 
 // Channels:
-// 1. Pitch         (Forward/backward)
-// 2. Roll          (Left/Right)
-// 3. Throttle      (Up/Down)
-// 4. Yaw           (Spin Left/Right)
-// 5. Motor Arming
+// 0. Pitch         (Forward/backward)
+// 1. Roll          (Left/Right)
+// 2. Throttle      (Up/Down)
+// 3. Yaw           (Spin Left/Right)
+// 4. Motor Arming
 
 ////////////////////
 //Actual functions//
@@ -80,15 +80,14 @@ void triggerRX(){
 
 void checkMotorArming(){
 
-    if(rx_raw[3] < (rx_min + 100)){ 
-        if(rx_raw[5] > rx_centre && !motorsArmed){                  // Motor Arming
+        
+        if(rx_raw[4] >= rx_max-5 && rx_raw[2] < rx_min+200){                  // Motor Arming
             motorsArmed = true;
         }
 
-        if(rx_raw[5] < rx_centre && motorsArmed){                   // Motor Disarming
+        if(rx_raw[4] < rx_max-5){                   // Motor Disarming
             motorsArmed = false;
         }
-    }
 }
 
 #endif
