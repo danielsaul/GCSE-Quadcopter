@@ -68,21 +68,21 @@ void loop(){
     delay(100);
 */
 /*
-    Serial.print(rx_raw[0]);
+    Serial.print(rxRaw[0]);
     Serial.print(", ");
-    Serial.print(rx_raw[1]);
+    Serial.print(rxRaw[1]);
     Serial.print(", ");
-    Serial.print(rx_raw[2]);
+    Serial.print(rxRaw[2]);
     Serial.print(", ");
-    Serial.print(rx_raw[3]);
+    Serial.print(rxRaw[3]);
     Serial.print(", ");
-    Serial.print(rx_raw[4]);
+    Serial.print(rxRaw[4]);
     Serial.print("\n");
     */
     
     long loopTime = micros();
 
-    int throttle = ((rx_raw[2]-1000)/1)+1000; // Scaled to 1/3
+    int throttle = ((rxRaw[2]-1000)/1)+1000; // Scaled to 1/3
         
     readADC();
     measureGyro();
@@ -108,9 +108,6 @@ void loop(){
     checkMotorArming();
     if(!motorsArmed){
         setMotors(1000,1000,1000,1000);
-        digitalWrite(STATUS_LED, LOW);
-    }else{
-        digitalWrite(STATUS_LED, HIGH);
     }
 
     updateMotors();

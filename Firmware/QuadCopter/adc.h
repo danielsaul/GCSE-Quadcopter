@@ -23,15 +23,13 @@ long getRawADC(int chnl);
 void setupADC();
 
 //Declare variables
-volatile uint16_t adc_value[6] = { 0,0,0,0,0,0 };
-uint16_t result;
+volatile uint16_t adcValue[6] = { 0,0,0,0,0,0 };
 
 ////////////////////
 //Actual functions//
 ////////////////////
 
 void setupADC(){
-
 
     Wire.begin();
     readADC();
@@ -62,8 +60,8 @@ void readADC(){
           //14 bit ADC, and each byte only takes 8 bits, hence two bytes needed
           byte a = Wire.read(); 
           byte b = Wire.read();
-          result = 0x0FFF & ((a << 8) | b);
-          adc_value[i] = result;
+          uint16_t result = 0x0FFF & ((a << 8) | b);
+          adcValue[i] = result;
         }
     }  
 
@@ -71,7 +69,7 @@ void readADC(){
 
 long getRawADC(int chnl){
 
-    return adc_value[chnl]; 
+    return adcValue[chnl]; 
 
 }
 

@@ -47,4 +47,9 @@
 #define MOTOR_MAXSPEED  2000
 bool motorsArmed =      false;
 
+// RX
+#define RX_MIN          1000;
+#define RX_MAX          2000;
+#define RX_CENTRE       1500;
+
 #endif

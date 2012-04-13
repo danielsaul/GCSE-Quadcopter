@@ -23,15 +23,12 @@ void triggerRX();
 void checkMotorArming();
 
 //Declare Variables
-int rx_min = 1000;
-int rx_centre = 1500;
-int rx_max = 2000;
-int rx_currentChannel;
-int rx_raw[5] = { 1500, 1500, 1000, 1500, 1500 };
-long rx_now;
-long rx_prev;
-unsigned long rx_diff;
-bool rx_ready;
+int rxCurrentChannel;
+int rxRaw[5] = { 1500, 1500, 1000, 1500, 1500 };
+long rxNow;
+long rxPrev;
+unsigned long rxDiff;
+bool rxReady = false;
 
 
 // Channels:
@@ -62,31 +59,44 @@ void setupReceiver(){
 
 void triggerRX(){
 
-    rx_now = micros();                                           
-    if(rx_prev > 0){                                         
-        rx_diff = rx_now - rx_prev;                                
-        if(rx_diff > 5000){                                      
-            rx_ready = true;                                     
-            rx_currentChannel = 0;
-        }else if (rx_ready == true){                                  
-                if(rx_diff >= 1000 && rx_diff <= 2000){
-                    rx_raw[rx_currentChannel] = rx_diff;             
+    rxNow = micros();                                           
+    if(rxPrev > 0){                                         
+        rxDiff = rxNow - rxPrev;                                
+        if(rxDiff > 5000){                                      
+            rxReady = true;                                     
+            rxCurrentChannel = 0;
+        }else if (rxReady == true){                                  
+                if(rxDiff >= 1000 && rxDiff <= 2000){
+                    rxRaw[rxCurrentChannel] = rxDiff;             
                 }
-                rx_currentChannel++;                                          }
+                rxCurrentChannel++;                                          
+        }
     }
     
-    rx_prev = rx_now;
+    rxPrev = rxNow;
 }
 
 void checkMotorArming(){
 
         
-        if(rx_raw[4] >= rx_max-5 && rx_raw[2] < rx_min+200){                  // Motor Arming
+        if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200){                  // Motor Arming
             motorsArmed = true;
+            digitalWrite(STATUS_LED, HIGH);
+        
+            if(SERIAL_ENABLED){
+                Serial.println("Motors: Armed.");
+            }
+
         }
 
-        if(rx_raw[4] < rx_max-5){                   // Motor Disarming
+        if(rxRaw[4] < RX_MAX-5){                   // Motor Disarming
             motorsArmed = false;
+            digitalWrite(STATUS_LED, LOW);
+
+            if(SERIAL_ENABLED){
+                Serial.println("Motors: Disarmed.");
+            }
+
         }
 }
 

@@ -58,7 +58,9 @@ void BatteryVoltage(){
 
 
     if (SERIAL_ENABLED){
-        Serial.println("Battery Voltage: " + batteryVoltage");
+        Serial.print("Battery Voltage: ");
+        Serial.print(BatteryVoltage);
+        Serial.println();
     }
 
 }
