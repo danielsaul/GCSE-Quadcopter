@@ -103,7 +103,7 @@ void loop(){
     throttleC = constrain(throttleC, 1100, 2000);
     throttleD = constrain(throttleD, 1100, 2000);
 
-    setMotors(throttleA,1000,throttleC,1000);
+    setMotors(throttleA,throttleB,throttleC,throttleD);
     
     checkMotorArming();
     if(!motorsArmed){

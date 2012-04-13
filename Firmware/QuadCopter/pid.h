@@ -26,12 +26,12 @@ struct PIDvariables{
     int Igain;
     int Dgain;
     int previous;
-    long prevtime;
-    float accumulatedError;
-    long Ilimit;
-} pidstuff[2]{ 
-    { 1000, 0, 0, 0, 0, 0.0, umm }
-    { 250, 0, 0, 0, 0, 0.0, umm };
+    int prevtime;
+    int accumulatedError;
+    int Ilimit;
+} pidstuff[2] = { 
+    { 100, 0.5, 0, 0, 0, 0.0, 500 },
+    { 100, 0.5, 0, 0, 0, 0.0, 500 }};
 
 // PID[0]   GYRO_MODE   PITCH
 // PID[1]   GYRO_MODE   ROLL
@@ -43,16 +43,15 @@ struct PIDvariables{
 
 int processPID(long target, long current, struct PIDvariables *pid){
 
-    long error = target - current;
+    int error = target - current;
    // float timediff = (loopTime - prevPID) / 1000000.0; //Convert microseconds to seconds
    // pid->prevtime = loopTime;
     pid->accumulatedError += error;
-    
-    constrain(pid->accumulatedError, -pid->accumulatedError, pid->accumulatedError);
+    //constrain(pid->accumulatedError, -pid->Ilimit, pid->Ilimit);
 
-    long Pterm = (error * pid->Pgain) / 100;
-    float Iterm = pid->accumulatedError * pid->Igain;
-    long Dterm = ((current - pid->previous) * pid->Dgain) / 100;    
+    int Pterm = (error * pid->Pgain) / 100;
+    int Iterm = pid->accumulatedError * pid->Igain;
+    int Dterm = ((current - pid->previous) * pid->Dgain) / 100;    
     
     pid->previous = current;
 
