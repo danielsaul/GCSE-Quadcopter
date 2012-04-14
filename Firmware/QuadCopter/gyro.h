@@ -17,8 +17,10 @@
 #include "Arduino.h"
 #include "QuadCopter.h"
 #include "adc.h"
+#include <avr/eeprom.h>
 
 //Declare functions
+void setupGyro();
 void calibrateGyro();
 void measureGyro();
 
@@ -35,6 +37,17 @@ int smooth(int current, int previous, int factor) {
   return ((previous * (16 - factor) + (current * factor))) / 16;
 }
 
+void setupGyro(){
+
+    gyroOffset[XAXIS] = eeprom_read_word(EEPROM_GYROZEROX);
+    gyroOffset[YAXIS] = eeprom_read_word(EEPROM_GYROZEROY);
+    gyroOffset[ZAXIS] = eeprom_read_word(EEPROM_GYROZEROZ);
+
+    if (SERIAL_ENABLED){
+        Serial.println("Gyro: Enabled.");
+    }
+
+}
 
 void measureGyro(){
 
@@ -61,7 +74,9 @@ void calibrateGyro(){
         gyroOffset[axis] = gyroCalibrationSamples[axis] / 500;
     }
 
-    
+    eeprom_update_word(EEPROM_GYROZEROX, gyroOffset[XAXIS]); 
+    eeprom_update_word(EEPROM_GYROZEROY, gyroOffset[YAXIS]); 
+    eeprom_update_word(EEPROM_GYROZEROZ, gyroOffset[ZAXIS]); 
 
     if (SERIAL_ENABLED){
         Serial.println("Gyroscopes: Calibrated & Saved.");

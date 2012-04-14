@@ -34,10 +34,6 @@ void setupADC(){
     Wire.begin();
     readADC();
 
-    digitalWrite(STATUS_LED,HIGH);
-    delay(50);
-    digitalWrite(STATUS_LED,LOW);
-
     if (SERIAL_ENABLED){
         Serial.println("ADC: Enabled");
     }

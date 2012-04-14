@@ -52,4 +52,13 @@ bool motorsArmed =      false;
 #define RX_MAX          2000;
 #define RX_CENTRE       1500;
 
+// EEPROM Addresses
+#define EEPROM_GYROZEROX    0;
+#define EEPROM_GYROZEROY    2;
+#define EEPROM_GYROZEROZ    4;
+#define EEPROM_ACCELZEROX   6;
+#define EEPROM_ACCELZEROY   8;
+#define EEPROM_ACCELZEROZ   10;
+
+
 #endif
