@@ -42,9 +42,8 @@ void setup(){
     setupMotors();
     setupGyro();
 //    setupAccel();
-//    calibrateAccel();
-    calibrateGyro();
 
+    prevTime = micros();
 }
 
 void loop(){

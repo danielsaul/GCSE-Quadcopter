@@ -18,6 +18,7 @@
 #include "QuadCopter.h"
 #include "adc.h"
 #include <avr/eeprom.h>
+#include "fourthorderfilter.h"
   
 //Declare functions
 void setupAccel();
@@ -29,6 +30,7 @@ void calibrateAccel();
 float accelCalibrationSamples[3] = {0.0,0.0,0.0};
 float accelOffset[3] = {0.0,0.0,0.0};
 float acceleration[3] = {0.0,0.0,0.0};
+float filteredAccel[3] = {0.0,0.0,0.0};
 
 ////////////////////
 //Actual functions//
@@ -39,6 +41,8 @@ void setupAccel(){
     accelOffset[XAXIS] = eeprom_read_word(EEPROM_ACCELZEROX);
     accelOffset[YAXIS] = eeprom_read_word(EEPROM_ACCELZEROY);
     accelOffset[ZAXIS] = eeprom_read_word(EEPROM_ACCELZEROZ);
+
+    setupFourthOrder();
 
     if (SERIAL_ENABLED){
         Serial.println("Accel: Enabled.");
@@ -52,6 +56,7 @@ void measureAccel(){
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
         float rawADC = getRawADC(axis);
         acceleration[axis] = rawADC * CONVERSION_FACTOR + accelOffset[axis];
+        filteredAccel[axis] = computeFourthOrder(acceleration[axis], &fourthOrder[axis]);
     }
 
 }
