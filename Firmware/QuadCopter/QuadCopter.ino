@@ -24,20 +24,10 @@
 // //////////////////////////////
 void setup(){
 
-    // Set outputs
-    pinMode(MOTORA_PIN, OUTPUT);
-    digitalWrite(MOTORA_PIN, LOW);
-    pinMode(MOTORB_PIN, OUTPUT);
-    digitalWrite(MOTORB_PIN, LOW);
-    pinMode(MOTORC_PIN, OUTPUT);
-    digitalWrite(MOTORC_PIN, LOW);
-    pinMode(MOTORD_PIN, OUTPUT);
-    digitalWrite(MOTORD_PIN, LOW);
-
     // Status LED
     pinMode(STATUS_LED, OUTPUT);
     digitalWrite(STATUS_LED, HIGH);
-    delay(100);
+    delay(500);
     digitalWrite(STATUS_LED, LOW);
 
     // Begin Serial to Computer, if enabled
@@ -50,37 +40,28 @@ void setup(){
     setupReceiver();    
     setupADC();
     setupMotors();
+    setupGyro();
+//    setupAccel();
 //    calibrateAccel();
     calibrateGyro();
 
 }
 
 void loop(){
-/*
-    readADC();
-    measureGyro();
-    Serial.print(gyroRate[0]);
-    Serial.print(", ");
-    Serial.print(gyroRate[1]);
-    Serial.print(", ");
-    Serial.print(gyroRate[2]);
-    Serial.print("\n");
-    delay(100);
-*/
-/*
-    Serial.print(rxRaw[0]);
-    Serial.print(", ");
-    Serial.print(rxRaw[1]);
-    Serial.print(", ");
-    Serial.print(rxRaw[2]);
-    Serial.print(", ");
-    Serial.print(rxRaw[3]);
-    Serial.print(", ");
-    Serial.print(rxRaw[4]);
-    Serial.print("\n");
-    */
     
-    long loopTime = micros();
+    loopTime = micros();
+    diffTime = loopTime - prevTime;
+
+    // 100Hz Loop - runs 100 times a second
+    if(diffTime >= 10000) {
+
+        // Read Sensors
+        readADC();
+        measureGyro();
+        measureAccel();
+
+        prevTime = loopTime;
+    }
 
     int throttle = ((rxRaw[2]-1000)/1)+1000; // Scaled to 1/3
         
@@ -105,12 +86,11 @@ void loop(){
 
     setMotors(throttleA,throttleB,throttleC,throttleD);
     
-    checkMotorArming();
+    checkRXCommands();
     if(!motorsArmed){
         setMotors(1000,1000,1000,1000);
     }
 
     updateMotors();
-    
-    delay(100);
+
 }

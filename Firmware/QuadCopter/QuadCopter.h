@@ -60,5 +60,10 @@ bool motorsArmed =      false;
 #define EEPROM_ACCELZEROY   8;
 #define EEPROM_ACCELZEROZ   10;
 
+// General variables
+
+unsigned long loopTime = 0;
+unsigned long prevTime = 0;
+unsigned long diffTime = 0;
 
 #endif

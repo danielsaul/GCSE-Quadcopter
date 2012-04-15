@@ -38,6 +38,17 @@ int motorSpeed[4] = { MOTOR_MINSPEED, MOTOR_MINSPEED, MOTOR_MINSPEED, MOTOR_MINS
 
 void setupMotors(){
 
+    pinMode(MOTORA_PIN, OUTPUT);
+    digitalWrite(MOTORA_PIN, LOW);
+    pinMode(MOTORB_PIN, OUTPUT);
+    digitalWrite(MOTORB_PIN, LOW);
+    pinMode(MOTORC_PIN, OUTPUT);
+    digitalWrite(MOTORC_PIN, LOW);
+    pinMode(MOTORD_PIN, OUTPUT);
+    digitalWrite(MOTORD_PIN, LOW);
+
+
+
     motorA.attach(MOTORA_PIN);
     motorB.attach(MOTORB_PIN);
     motorC.attach(MOTORC_PIN);

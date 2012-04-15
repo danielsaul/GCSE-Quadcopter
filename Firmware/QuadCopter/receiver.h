@@ -20,7 +20,7 @@
 //Declare functions
 void setupReceiver();
 void triggerRX();
-void checkMotorArming();
+void checkRXCommands();
 
 //Declare Variables
 int rxCurrentChannel;
@@ -76,28 +76,35 @@ void triggerRX(){
     rxPrev = rxNow;
 }
 
-void checkMotorArming(){
+void checkRXCommands(){
 
-        
-        if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200){                  // Motor Arming
+        // Motor Arming
+        if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200){
             motorsArmed = true;
             digitalWrite(STATUS_LED, HIGH);
         
             if(SERIAL_ENABLED){
                 Serial.println("Motors: Armed.");
             }
-
         }
 
-        if(rxRaw[4] < RX_MAX-5){                   // Motor Disarming
+        // Motor Disarming
+        if(rxRaw[4] < RX_MAX-5){                   
             motorsArmed = false;
             digitalWrite(STATUS_LED, LOW);
 
             if(SERIAL_ENABLED){
                 Serial.println("Motors: Disarmed.");
             }
-
         }
+
+    // Sensor Calibration
+    if(!motorsArmed && rxRaw[2] < RX_MIN+100 && rxRaw[3] < RX_MIN+100 && rxRaw[0] < RX_MIN+100 && rxRaw[1] > RX_MAX-100){
+        calibrateGyro();
+        calibrateAccel();
+    }
 }
+
+
 
 #endif
