@@ -81,7 +81,7 @@ void calibrateAccel(){
 
     accelOffset[XAXIS] = -accelCalibrationSamples[XAXIS];
     accelOffset[YAXIS] = -accelCalibrationSamples[YAXIS];
-    accelOffset[ZAXIS] = 9.8065-accelCalibrationSamples[ZAXIS];
+    accelOffset[ZAXIS] = -9.8065-accelCalibrationSamples[ZAXIS];
 
     eeprom_update_word(EEPROM_ACCELZEROX, accelOffset[XAXIS]);
     eeprom_update_word(EEPROM_ACCELZEROY, accelOffset[YAXIS]);

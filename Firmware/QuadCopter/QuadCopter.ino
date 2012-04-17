@@ -53,43 +53,44 @@ void loop(){
 
     // 100Hz Loop - runs 100 times a second
     if(diffTime >= 10000) {
-
+        diffTimeSecs = diffTime / 1000000.0;
+        
         // Read Sensors
         readADC();
         measureGyro();
         measureAccel();
 
+        calculateKinematics(gyroRate[XAXIS],gyroRate[YAXIS],gyroRate[ZAXIS],filteredAccel[XAXIS],filteredAccel[YAXIS],filteredAccel[ZAXIS],0.0,0.0,0.0,diffTimeSecs);
+
+        //Motor Stuff
+        if(!GYRO_MODE){
+            float rollAccelPID = updatePID((rxRaw[1]-1500) * 0.0015, kinematicsAngle[XAXIS], ATTITUDE PID);
+            float pitchAccelPID = updatePID((rxRaw[0]-1500) * 0.0015, -kinematicsAngle[YAXIS], ATTITUDE PID);
+            rollAxis = updatePID(rollAccelPID, gyroRate[XAXIS]*1.2, ATTITUDE GYRO PID);
+            pitchAxis = updatePID(pitchAccelPID, gyroRate[YAXIS]*1.2, ATTITUDE GYRO PID);
+        }else{
+            rollAxis = updatePID((rxRaw[1]-1500) * 0.005), gyroRate[XAXIS]*0.8, RATE PID);
+            pitchAxis = updatePID((rxRaw[0]-1500) * 0.005), gyroRate[YAXIS]*0.8, RATE PID);
+        }
+
+        
+
+        checkRXCommands();
+        if(!motorsArmed){
+            setMotors(MOTOR_MINSPEED,MOTOR_MINSPEED,MOTOR_MINSPEED,MOTOR_MINSPEED);
+        }
+
+        updateMotors();
+
         prevTime = loopTime;
     }
 
-    int throttle = ((rxRaw[2]-1000)/1)+1000; // Scaled to 1/3
-        
-    readADC();
-    measureGyro();
-
-    int rollx = processPID(1500, gyroRate[XAXIS] + 1500, &pidstuff[1]);
-    int pitchy = processPID(1500, gyroRate[YAXIS] + 1500, &pidstuff[0]);
-
     // Motors A and C are opposite
-    int throttleA = throttle - pitchy;
-    int throttleC = throttle + pitchy;
+//    int throttleA = throttle - pitchy;
+//    int throttleC = throttle + pitchy;
 
     // Motors B and D are opposite
-    int throttleB = throttle - rollx;
-    int throttleD = throttle + rollx;
-
-    throttleA = constrain(throttleA, 1100, 2000);
-    throttleB = constrain(throttleB, 1100, 2000);
-    throttleC = constrain(throttleC, 1100, 2000);
-    throttleD = constrain(throttleD, 1100, 2000);
-
-    setMotors(throttleA,throttleB,throttleC,throttleD);
-    
-    checkRXCommands();
-    if(!motorsArmed){
-        setMotors(1000,1000,1000,1000);
-    }
-
-    updateMotors();
+//    int throttleB = throttle - rollx;
+//    int throttleD = throttle + rollx;
 
 }

@@ -30,7 +30,6 @@
 
 /* Gyro or Gyro&Accel */
 #define GYRO_MODE       true
-#define MIXED_MODE      false  
 
 // Axis
 #define XAXIS           0
@@ -65,5 +64,6 @@ bool motorsArmed =      false;
 unsigned long loopTime = 0;
 unsigned long prevTime = 0;
 unsigned long diffTime = 0;
+float diffTimeSecs = 0.001;
 
 #endif
