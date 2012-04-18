@@ -41,7 +41,8 @@
 #define MOTOR_B         1
 #define MOTOR_C         2
 #define MOTOR_D         3
-#define MOTOR_MINSPEED  1000
+#define MOTOR_OFFSPEED  1000
+#define MOTOR_MINSPEED  1100
 #define MOTOR_MIDSPEED  1500
 #define MOTOR_MAXSPEED  2000
 bool motorsArmed =      false;

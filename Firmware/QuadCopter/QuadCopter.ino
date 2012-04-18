@@ -64,33 +64,35 @@ void loop(){
 
         //Motor Stuff
         if(!GYRO_MODE){
-            float rollAccelPID = updatePID((rxRaw[1]-1500) * 0.0015, kinematicsAngle[XAXIS], ATTITUDE PID);
-            float pitchAccelPID = updatePID((rxRaw[0]-1500) * 0.0015, -kinematicsAngle[YAXIS], ATTITUDE PID);
-            rollAxis = updatePID(rollAccelPID, gyroRate[XAXIS]*1.2, ATTITUDE GYRO PID);
-            pitchAxis = updatePID(pitchAccelPID, gyroRate[YAXIS]*1.2, ATTITUDE GYRO PID);
+            float rollAccelPID = processPID((rxRaw[1]-1500) * 0.0015, kinematicsAngle[XAXIS], pidstuff[3]);
+            float pitchAccelPID = processPID((rxRaw[0]-1500) * 0.0015, -kinematicsAngle[YAXIS], pidstuff[4]);
+            rollAxis = processPID(rollAccelPID, gyroRate[XAXIS]*1.2, pidstuff[5]);
+            pitchAxis = processPID(pitchAccelPID, gyroRate[YAXIS]*1.2, pidstuff[6]);
         }else{
-            rollAxis = updatePID((rxRaw[1]-1500) * 0.005), gyroRate[XAXIS]*0.8, RATE PID);
-            pitchAxis = updatePID((rxRaw[0]-1500) * 0.005), gyroRate[YAXIS]*0.8, RATE PID);
+            rollAxis = processPID((rxRaw[1]-1500) * 0.005), gyroRate[XAXIS]*0.8, pidstuff[0]);
+            pitchAxis = processPID((rxRaw[0]-1500) * 0.005), gyroRate[YAXIS]*0.8, pidstuff[1]);
         }
 
-        
+        motorSpeed[MOTOR_A] = rxRaw[2] - pitchAxis;
+        motorSpeed[MOTOR_C] = rxRaw[2] + pitchAxis;
+        motorSpeed[MOTOR_B] = rxRaw[2] - rollAxis;
+        motorSpeed[MOTOR_D] = rxRaw[2] + rollAxis;
+
+       for(byte motor = 0; motor < 4; motor++){
+            motorSpeed[motor] = constrain(motorSpeed[motor], 1100, 2000);
+            if(rxRaw[2] < 1100){
+                motorSpeed[motor] = 1100;
+            }
+       }
 
         checkRXCommands();
         if(!motorsArmed){
-            setMotors(MOTOR_MINSPEED,MOTOR_MINSPEED,MOTOR_MINSPEED,MOTOR_MINSPEED);
+            setMotors(MOTOR_OFFSPEED,MOTOR_OFFSPEED,MOTOR_OFFSPEED,MOTOR_OFFSPEED);
         }
 
         updateMotors();
 
         prevTime = loopTime;
     }
-
-    // Motors A and C are opposite
-//    int throttleA = throttle - pitchy;
-//    int throttleC = throttle + pitchy;
-
-    // Motors B and D are opposite
-//    int throttleB = throttle - rollx;
-//    int throttleD = throttle + rollx;
 
 }

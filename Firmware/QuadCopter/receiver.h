@@ -82,7 +82,7 @@ void checkRXCommands(){
         if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200){
             motorsArmed = true;
             digitalWrite(STATUS_LED, HIGH);
-        
+            zeroAccumulatedError(); 
             if(SERIAL_ENABLED){
                 Serial.println("Motors: Armed.");
             }
@@ -92,7 +92,7 @@ void checkRXCommands(){
         if(rxRaw[4] < RX_MAX-5){                   
             motorsArmed = false;
             digitalWrite(STATUS_LED, LOW);
-
+            zeroAccumulatedError();
             if(SERIAL_ENABLED){
                 Serial.println("Motors: Disarmed.");
             }
@@ -100,6 +100,7 @@ void checkRXCommands(){
 
     // Sensor Calibration
     if(!motorsArmed && rxRaw[2] < RX_MIN+100 && rxRaw[3] < RX_MIN+100 && rxRaw[0] < RX_MIN+100 && rxRaw[1] > RX_MAX-100){
+        zeroAccumulatedError();
         calibrateGyro();
         calibrateAccel();
     }

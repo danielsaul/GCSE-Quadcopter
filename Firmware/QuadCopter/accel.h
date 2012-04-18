@@ -56,6 +56,8 @@ void measureAccel(){
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
         float rawADC = getRawADC(axis);
         acceleration[axis] = rawADC * CONVERSION_FACTOR + accelOffset[axis];
+        acceleration[XAXIS] = -acceleration[XAXIS];
+        acceleration[YAXIS] = -acceleration[YAXIS];
         filteredAccel[axis] = computeFourthOrder(acceleration[axis], &fourthOrder[axis]);
     }
 

@@ -30,7 +30,7 @@ Servo motorB;
 Servo motorC;
 Servo motorD;
 
-int motorSpeed[4] = { MOTOR_MINSPEED, MOTOR_MINSPEED, MOTOR_MINSPEED, MOTOR_MINSPEED };
+int motorSpeed[4] = { MOTOR_OFFSPEED, MOTOR_OFFSPEED, MOTOR_OFFSPEED, MOTOR_OFFSPEED };
 
 ////////////////////
 //Actual functions//

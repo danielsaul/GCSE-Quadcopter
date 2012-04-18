@@ -28,6 +28,8 @@ void measureGyro();
 int gyroCalibrationSamples[3] = {0,0,0};
 int gyroOffset[3] = {0,0,0};
 float gyroRate[3] = {0.0,0.0,0.0};
+float gyroHeading = 0.0;
+unsigned long gyroTime = 0;
 
 ////////////////////
 //Actual functions//
@@ -54,9 +56,17 @@ void measureGyro(){
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
         int rawADC = getRawADC(axis + 3);
         rawADC -= gyroOffset[axis];
-        gyroRate[axis] = smooth(rawADC, gyroRate[axis], 8);
-        //gyroRate[axis] = rawADC * radians((3.3/4095.0) / 0.002);
+       // gyroRate[axis] = smooth(rawADC, gyroRate[axis], 8);
+        gyroRate[axis] = rawADC * radians((3.3/4095.0) / 0.002);
     }
+
+// Get heading from the Z axis of the gyro
+  long int currentTime = micros();
+  if (gyroRate[ZAXIS] > radians(1.0) || gyroRate[ZAXIS] < radians(-1.0)) {
+    gyroHeading += gyroRate[ZAXIS] * ((currentTime - gyroTime) / 1000000.0);
+  }
+  gyroTime = currentTime;
+
 
 }
 

@@ -30,20 +30,15 @@ volatile uint16_t adcValue[6] = { 0,0,0,0,0,0 };
 ////////////////////
 
 void setupADC(){
-
     Wire.begin();
     readADC();
-
     if (SERIAL_ENABLED){
         Serial.println("ADC: Enabled");
     }
-
 }
 
 void readADC(){
-  
     for (int i = 0; i < 6; i++){
-
         //Talk to ADC over I2C bus
         Wire.beginTransmission(0b0110011);
         Wire.write(0b01100001 | ((i & 0b00001111) << 1));
@@ -60,13 +55,10 @@ void readADC(){
           adcValue[i] = result;
         }
     }  
-
 }
 
 long getRawADC(int chnl){
-
     return adcValue[chnl]; 
-
 }
 
 #endif
