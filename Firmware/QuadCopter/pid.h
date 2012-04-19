@@ -18,7 +18,7 @@
 #include "QuadCopter.h"
 
 //Declare functions
-int processPID(long target, long current);
+float processPID(float target, float current, struct PIDvariables *pid);
 
 //Declare Variables
 struct PIDvariables{
@@ -29,22 +29,22 @@ struct PIDvariables{
     float prevtime;
     float accumulatedError;
     float Ilimit;
-} pidstuff[7] = { 
-    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000 }, //PID[0]  GYRO_MODE  ROLL
-    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000 }, //PID[1]  GYRO_MODE  PITCH
-    { 200.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1000 }, //PID[2]  GYRO_MODE  YAW
+} pidstuff[8] = { 
+    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000.0 }, //PID[0]  GYRO_MODE  ROLL
+    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000.0 }, //PID[1]  GYRO_MODE  PITCH
+    { 200.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1000.0 }, //PID[2]  GYRO_MODE  YAW
     { 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.375 }, //PID[3]  STABLE     ROLL
     { 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.375 }, //PID[4]  STABLE     PITCH
-    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000 }, //PID[5]  STABLEGYRO ROLL
-    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000 }};//PID[6]  STABLEGYRO PITCH
-    { 3.0, 0.1, 0.0, 0.0, 0.0, 0.0, 1000 }};//PID[7]  HEADING HOLD
+    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000.0 }, //PID[5]  STABLEGYRO ROLL
+    { 100.0, 0.0, -300.0, 0.0, 0.0, 0.0, 1000.0 },//PID[6]  STABLEGYRO PITCH
+    { 3.0, 0.1, 0.0, 0.0, 0.0, 0.0, 1000.0 }};//PID[7]  HEADING HOLD
 
 
 
 
 // Proportional Integral Derivative Controller
 
-int processPID(long target, long current, struct PIDvariables *pid){
+float processPID(float target, float current, struct PIDvariables *pid){
 
     float error = target - current;
 
@@ -67,7 +67,7 @@ int processPID(long target, long current, struct PIDvariables *pid){
 void zeroAccumulatedError(){
     for(byte i = 0; i <= 6; i++){
         pidstuff[i].accumulatedError = 0;
-        pidstuff[i].prevTime = current;
+        pidstuff[i].prevtime = loopTime;
     }
 }
 

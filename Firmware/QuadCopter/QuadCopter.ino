@@ -16,7 +16,7 @@
 #include "pid.h"
 #include "receiver.h"
 #include "motors.h"
-//#include "accel.h"
+#include "accel.h"
 #include "gyro.h"
 
 /////////////////////////////////
@@ -41,7 +41,7 @@ void setup(){
     setupADC();
     setupMotors();
     setupGyro();
-//    setupAccel();
+    setupAccel();
 
     prevTime = micros();
 }
@@ -69,8 +69,8 @@ void loop(){
             rollAxis = processPID(rollAccelPID, gyroRate[XAXIS]*1.2, pidstuff[5]);
             pitchAxis = processPID(pitchAccelPID, gyroRate[YAXIS]*1.2, pidstuff[6]);
         }else{
-            rollAxis = processPID((rxRaw[1]-1500) * 0.005), gyroRate[XAXIS]*0.8, pidstuff[0]);
-            pitchAxis = processPID((rxRaw[0]-1500) * 0.005), gyroRate[YAXIS]*0.8, pidstuff[1]);
+            rollAxis = processPID((rxRaw[1]-1500) * 0.005, gyroRate[XAXIS]*0.8, pidstuff[0]);
+            pitchAxis = processPID((rxRaw[0]-1500) * 0.005, gyroRate[YAXIS]*0.8, pidstuff[1]);
         }
 
         motorSpeed[MOTOR_A] = rxRaw[2] - pitchAxis;

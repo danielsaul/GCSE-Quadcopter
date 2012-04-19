@@ -38,21 +38,18 @@ float filteredAccel[3] = {0.0,0.0,0.0};
 
 void setupAccel(){
 
-    accelOffset[XAXIS] = eeprom_read_word(EEPROM_ACCELZEROX);
-    accelOffset[YAXIS] = eeprom_read_word(EEPROM_ACCELZEROY);
-    accelOffset[ZAXIS] = eeprom_read_word(EEPROM_ACCELZEROZ);
-
+    accelOffset[XAXIS] = eeprom_read_word((uint16_t*)EEPROM_ACCELZEROX);
+    accelOffset[YAXIS] = eeprom_read_word((uint16_t*)EEPROM_ACCELZEROY);
+    accelOffset[ZAXIS] = eeprom_read_word((uint16_t*)EEPROM_ACCELZEROZ);
     setupFourthOrder();
 
     if (SERIAL_ENABLED){
         Serial.println("Accel: Enabled.");
     }
-
 }
 
 
 void measureAccel(){
-
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
         float rawADC = getRawADC(axis);
         acceleration[axis] = rawADC * CONVERSION_FACTOR + accelOffset[axis];
@@ -60,11 +57,9 @@ void measureAccel(){
         acceleration[YAXIS] = -acceleration[YAXIS];
         filteredAccel[axis] = computeFourthOrder(acceleration[axis], &fourthOrder[axis]);
     }
-
 }
 
 void calibrateAccel(){
-
     //Take 500 samples and add them together for each axis
     for(int samples = 0; samples < 500; samples++){
         readADC();
@@ -85,15 +80,12 @@ void calibrateAccel(){
     accelOffset[YAXIS] = -accelCalibrationSamples[YAXIS];
     accelOffset[ZAXIS] = -9.8065-accelCalibrationSamples[ZAXIS];
 
-    eeprom_update_word(EEPROM_ACCELZEROX, accelOffset[XAXIS]);
-    eeprom_update_word(EEPROM_ACCELZEROY, accelOffset[YAXIS]);
-    eeprom_update_word(EEPROM_ACCELZEROZ, accelOffset[ZAXIS]);
+    eeprom_write_word((uint16_t*)EEPROM_ACCELZEROX, accelOffset[XAXIS]);
+    eeprom_write_word((uint16_t*)EEPROM_ACCELZEROY, accelOffset[YAXIS]);
+    eeprom_write_word((uint16_t*)EEPROM_ACCELZEROZ, accelOffset[ZAXIS]);
 
     if (SERIAL_ENABLED){
         Serial.println("Accelerometer: Calibrated & Saved.");
     }
-
 }
-
-
 #endif

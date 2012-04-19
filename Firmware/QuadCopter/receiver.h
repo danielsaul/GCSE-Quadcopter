@@ -16,6 +16,8 @@
 // Include necessary header files
 #include "Arduino.h"
 #include "QuadCopter.h"
+#include "gyro.h"
+#include "accel.h"
 
 //Declare functions
 void setupReceiver();

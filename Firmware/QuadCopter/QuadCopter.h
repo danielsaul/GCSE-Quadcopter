@@ -46,19 +46,22 @@
 #define MOTOR_MIDSPEED  1500
 #define MOTOR_MAXSPEED  2000
 bool motorsArmed =      false;
+float rollAxis = 0.0;
+float pitchAxis = 0.0;
+float yawAxis = 0.0;
 
 // RX
-#define RX_MIN          1000;
-#define RX_MAX          2000;
-#define RX_CENTRE       1500;
+#define RX_MIN          1000
+#define RX_MAX          2000
+#define RX_CENTRE       1500
 
 // EEPROM Addresses
-#define EEPROM_GYROZEROX    0;
-#define EEPROM_GYROZEROY    2;
-#define EEPROM_GYROZEROZ    4;
-#define EEPROM_ACCELZEROX   6;
-#define EEPROM_ACCELZEROY   8;
-#define EEPROM_ACCELZEROZ   10;
+#define EEPROM_GYROZEROX    0
+#define EEPROM_GYROZEROY    2
+#define EEPROM_GYROZEROZ    4
+#define EEPROM_ACCELZEROX   6
+#define EEPROM_ACCELZEROY   8
+#define EEPROM_ACCELZEROZ   10
 
 // General variables
 

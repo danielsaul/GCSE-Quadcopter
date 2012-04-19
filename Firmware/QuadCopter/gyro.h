@@ -41,9 +41,9 @@ int smooth(int current, int previous, int factor) {
 
 void setupGyro(){
 
-    gyroOffset[XAXIS] = eeprom_read_word(EEPROM_GYROZEROX);
-    gyroOffset[YAXIS] = eeprom_read_word(EEPROM_GYROZEROY);
-    gyroOffset[ZAXIS] = eeprom_read_word(EEPROM_GYROZEROZ);
+    gyroOffset[XAXIS] = eeprom_read_word((uint16_t*)EEPROM_GYROZEROX);
+    gyroOffset[YAXIS] = eeprom_read_word((uint16_t*)EEPROM_GYROZEROY);
+    gyroOffset[ZAXIS] = eeprom_read_word((uint16_t*)EEPROM_GYROZEROZ);
 
     if (SERIAL_ENABLED){
         Serial.println("Gyro: Enabled.");
@@ -84,9 +84,9 @@ void calibrateGyro(){
         gyroOffset[axis] = gyroCalibrationSamples[axis] / 500;
     }
 
-    eeprom_update_word(EEPROM_GYROZEROX, gyroOffset[XAXIS]); 
-    eeprom_update_word(EEPROM_GYROZEROY, gyroOffset[YAXIS]); 
-    eeprom_update_word(EEPROM_GYROZEROZ, gyroOffset[ZAXIS]); 
+    eeprom_write_word((uint16_t*)EEPROM_GYROZEROX, gyroOffset[XAXIS]); 
+    eeprom_write_word((uint16_t*)EEPROM_GYROZEROY, gyroOffset[YAXIS]); 
+    eeprom_write_word((uint16_t*)EEPROM_GYROZEROZ, gyroOffset[ZAXIS]); 
 
     if (SERIAL_ENABLED){
         Serial.println("Gyroscopes: Calibrated & Saved.");
