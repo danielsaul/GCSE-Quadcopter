@@ -62,15 +62,16 @@ void loop(){
 
         calculateKinematics(gyroRate[XAXIS],gyroRate[YAXIS],gyroRate[ZAXIS],filteredAccel[XAXIS],filteredAccel[YAXIS],filteredAccel[ZAXIS],0.0,0.0,0.0,diffTimeSecs);
 
+
         //Motor Stuff
         if(!GYRO_MODE){
-            float rollAccelPID = processPID((rxRaw[1]-1500) * 0.0015, kinematicsAngle[XAXIS], pidstuff[3]);
-            float pitchAccelPID = processPID((rxRaw[0]-1500) * 0.0015, -kinematicsAngle[YAXIS], pidstuff[4]);
-            rollAxis = processPID(rollAccelPID, gyroRate[XAXIS]*1.2, pidstuff[5]);
-            pitchAxis = processPID(pitchAccelPID, gyroRate[YAXIS]*1.2, pidstuff[6]);
+            float rollAccelPID = processPID((rxRaw[1]-1500) * 0.0015, kinematicsAngle[XAXIS], &pidstuff[3]);
+            float pitchAccelPID = processPID((rxRaw[0]-1500) * 0.0015, -kinematicsAngle[YAXIS], &pidstuff[4]);
+            rollAxis = processPID(rollAccelPID, gyroRate[XAXIS]*1.2, &pidstuff[5]);
+            pitchAxis = processPID(pitchAccelPID, gyroRate[YAXIS]*1.2, &pidstuff[6]);
         }else{
-            rollAxis = processPID((rxRaw[1]-1500) * 0.005, gyroRate[XAXIS]*0.8, pidstuff[0]);
-            pitchAxis = processPID((rxRaw[0]-1500) * 0.005, gyroRate[YAXIS]*0.8, pidstuff[1]);
+            rollAxis = processPID((rxRaw[1]-1500) * 0.005, gyroRate[XAXIS]*0.8, &pidstuff[0]);
+            pitchAxis = processPID((rxRaw[0]-1500) * 0.005, gyroRate[YAXIS]*0.8, &pidstuff[1]);
         }
 
         motorSpeed[MOTOR_A] = rxRaw[2] - pitchAxis;
