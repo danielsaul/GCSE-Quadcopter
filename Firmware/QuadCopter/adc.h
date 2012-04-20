@@ -57,7 +57,7 @@ void readADC(){
     }  
 }
 
-long getRawADC(int chnl){
+float getRawADC(int chnl){
     return adcValue[chnl]; 
 }
 

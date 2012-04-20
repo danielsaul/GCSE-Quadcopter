@@ -25,8 +25,8 @@ void calibrateGyro();
 void measureGyro();
 
 //Declare variables
-int gyroCalibrationSamples[3] = {0,0,0};
-int gyroOffset[3] = {0,0,0};
+float gyroCalibrationSamples[3] = {0,0,0};
+float gyroOffset[3] = {0,0,0};
 float gyroRate[3] = {0.0,0.0,0.0};
 float gyroHeading = 0.0;
 unsigned long gyroTime = 0;
@@ -54,7 +54,7 @@ void setupGyro(){
 void measureGyro(){
 
     for(byte axis = XAXIS; axis <= ZAXIS; axis++){
-        int rawADC = getRawADC(axis + 3);
+        float rawADC = getRawADC(axis + 3);
         rawADC -= gyroOffset[axis];
        // gyroRate[axis] = smooth(rawADC, gyroRate[axis], 8);
         gyroRate[axis] = rawADC * radians((3.3/4095.0) / 0.002);
@@ -75,7 +75,7 @@ void calibrateGyro(){
     for(int samples = 0; samples < 500; samples++){
         readADC();
         for(byte axis = XAXIS; axis <= ZAXIS; axis++){
-            int rawADC = getRawADC(axis + 3);
+            float rawADC = getRawADC(axis + 3);
             gyroCalibrationSamples[axis] += rawADC;            
         }
     }

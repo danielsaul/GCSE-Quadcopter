@@ -81,7 +81,7 @@ void triggerRX(){
 void checkRXCommands(){
 
         // Motor Arming
-        if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200){
+        if(rxRaw[4] >= RX_MAX-5 && rxRaw[2] < RX_MIN+200 && !motorsArmed){
             motorsArmed = true;
             digitalWrite(STATUS_LED, HIGH);
             zeroAccumulatedError(); 
@@ -91,7 +91,7 @@ void checkRXCommands(){
         }
 
         // Motor Disarming
-        if(rxRaw[4] < RX_MAX-5){                   
+        if(rxRaw[4] < RX_MAX-5 && motorsArmed){                   
             motorsArmed = false;
             digitalWrite(STATUS_LED, LOW);
             zeroAccumulatedError();
