@@ -1,4 +1,5 @@
-#GCSE Quadcopter - NOT FUNCTIONAL. Still here for historical purposes :)
+#GCSE Quadcopter - NOT FUNCTIONAL.
+###Still here for historical purposes :)
 #### � Copyright Daniel Saul
 
 My GCSE Quadcopter project: the aim of which is to create a fully-functional, four rotored, remote control helicopter from scratch. 
